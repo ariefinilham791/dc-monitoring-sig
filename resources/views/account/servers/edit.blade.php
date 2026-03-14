@@ -15,17 +15,17 @@
             </div>
 
             <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form action="{{ route('server.update', $server) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="hostname" class="form-label">Hostname <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('hostname') is-invalid @enderror" id="hostname" name="hostname" value="{{ old('hostname', $server->hostname) }}" required maxlength="100">
                                 @error('hostname')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="ip_address" class="form-label">IP Address</label>
                                 <input type="text" class="form-control @error('ip_address') is-invalid @enderror" id="ip_address" name="ip_address" value="{{ old('ip_address', $server->ip_address) }}" maxlength="45">
                                 @error('ip_address')<div class="invalid-feedback">{{ $message }}</div>@enderror

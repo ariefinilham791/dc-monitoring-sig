@@ -15,7 +15,7 @@
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-body py-3 px-4">
                         <form method="get" action="{{ route('checklist.log') }}" class="row g-2 align-items-end">
-                            <div class="col-auto flex-grow-1" style="min-width: 180px;">
+                            <div class="col-12 col-sm-auto flex-grow-1" style="min-width: 0;">
                                 <label for="log-round-id" class="form-label small text-muted mb-1">Periode</label>
                                 <select name="round_id" id="log-round-id" class="form-select" onchange="this.form.submit()">
                                     @foreach($rounds as $r)
@@ -24,9 +24,9 @@
                                 </select>
                             </div>
                             @if($round)
-                                <div class="col-auto">
-                                    <label class="form-label small text-muted mb-1 d-block">&nbsp;</label>
-                                    <a href="{{ route('checklist.log.export', ['round_id' => $round->id]) }}" class="btn btn-success">
+                                <div class="col-12 col-sm-auto">
+                                    <label class="form-label small text-muted mb-1 d-block d-sm-none">&nbsp;</label>
+                                    <a href="{{ route('checklist.log.export', ['round_id' => $round->id]) }}" class="btn btn-success w-100 w-sm-auto">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1 align-middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                         Export Excel
                                     </a>
@@ -57,7 +57,7 @@
                                     @else
                                         <span class="badge bg-secondary">Belum selesai</span>
                                     @endif
-                                    <a href="{{ route('checklist.fill', $src) }}" class="btn btn-sm btn-outline-primary ms-auto">Edit</a>
+                                    <a href="{{ route('checklist.fill', $src) }}" class="btn btn-sm btn-outline-primary ms-auto mt-1 mt-sm-0">Edit</a>
                                 </div>
                                 <div class="card-body p-0">
                                     @if($src->checkItems->isEmpty())

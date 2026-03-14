@@ -25,12 +25,12 @@
                         <span class="badge bg-{{ $badge }} me-1">{{ \App\Models\Server::statusLabels()[$server->physical_status] ?? $server->physical_status }}</span>
                         <span class="badge bg-info">{{ \App\Models\Server::serverTypeLabels()[$server->server_type] ?? $server->server_type }}</span>
                     </div>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('server.edit', $server) }}" class="btn btn-primary">Edit</a>
+                    <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto">
+                        <a href="{{ route('server.edit', $server) }}" class="btn btn-primary btn-sm">Edit</a>
                         <form action="{{ route('server.destroy', $server) }}" method="POST" class="d-inline form-delete-server">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger">Hapus</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Hapus</button>
                         </form>
                     </div>
                 </div>
@@ -70,9 +70,9 @@
 
             {{-- Spesifikasi Server --}}
             <div class="card border-0 shadow-sm mb-4 spec-card">
-                <div class="card-header bg-white border-0 border-bottom d-flex justify-content-between align-items-center py-3 px-4">
+                <div class="card-header bg-white border-0 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2 py-3 px-3 px-md-4">
                     <h5 class="mb-0 fw-600">Spesifikasi Server</h5>
-                    <a href="{{ route('component-type.index') }}" class="btn btn-sm btn-outline-secondary">Kelola tipe</a>
+                    <a href="{{ route('component-type.index') }}" class="btn btn-sm btn-outline-secondary align-self-start align-self-sm-center">Kelola tipe</a>
                 </div>
                 <div class="card-body p-4">
                     @if(isset($componentTypes) && $componentTypes->isNotEmpty())
@@ -118,7 +118,8 @@
                         <form id="form-bulk-delete-components" method="POST" action="{{ route('server.components.destroy.bulk', $server) }}">
                             @csrf
                             @method('DELETE')
-                            <div class="table-responsive rounded border">
+                            {{-- Desktop: table --}}
+                            <div class="d-none d-md-block table-responsive rounded border">
                                 <table class="table table-sm table-hover align-middle mb-0 spec-table">
                                     <thead class="table-light">
                                         <tr>
@@ -156,8 +157,44 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-2">
-                                <button type="submit" form="form-bulk-delete-components" class="btn btn-sm btn-outline-danger form-bulk-delete-components-btn" disabled>Hapus terpilih</button>
+                            {{-- Mobile: cards --}}
+                            <div class="d-md-none">
+                                <div class="mb-2">
+                                    <input type="checkbox" class="form-check-input" id="component-select-all-mob" title="Pilih semua">
+                                    <label for="component-select-all-mob" class="form-check-label small">Pilih semua</label>
+                                </div>
+                                @foreach($server->components as $comp)
+                                    <div class="card border mb-2 spec-mobile-card">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex align-items-start gap-2 mb-2">
+                                                <input type="checkbox" class="form-check-input component-cb mt-1" name="components[]" value="{{ $comp->id }}" form="form-bulk-delete-components">
+                                                <div class="flex-grow-1 min-w-0">
+                                                    <span class="fw-medium">{{ $comp->componentType->name ?? '–' }}</span>
+                                                    <span class="text-muted">{{ $comp->label ?? $comp->name ?? '' }}</span>
+                                                    <div class="small text-muted mt-1">
+                                                        @if(!empty($comp->values) && is_array($comp->values))
+                                                            @php $pairs = []; foreach($comp->values as $k => $v) { if ((string)$v !== '') $pairs[] = $k . ': ' . $v; } @endphp
+                                                            {{ implode(' · ', $pairs) ?: '–' }}
+                                                        @else
+                                                            –
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <a href="{{ route('server.components.edit', [$server, $comp]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                <form action="{{ route('server.components.destroy', [$server, $comp]) }}" method="POST" class="d-inline form-delete-component">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <div class="mt-2">
+                                    <button type="submit" form="form-bulk-delete-components" class="btn btn-sm btn-outline-danger form-bulk-delete-components-btn" disabled>Hapus terpilih</button>
+                                </div>
                             </div>
                         </form>
                     @endif
@@ -186,16 +223,16 @@
                     <form action="{{ route('server.checklist.store', $server) }}" method="POST" class="mb-4">
                         @csrf
                         <div class="row g-2 align-items-end">
-                            <div class="col-md-8">
+                            <div class="col-12 col-md-8">
                                 <label for="item_title" class="form-label small">Item <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control form-control-sm @error('title') is-invalid @enderror" id="item_title" name="title" value="{{ old('title') }}" required maxlength="255" placeholder="Contoh: Cek disk space, Backup database">
                                 @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-6 col-md-2">
                                 <label for="item_sort" class="form-label small">Urutan</label>
                                 <input type="number" class="form-control form-control-sm" name="sort_order" id="item_sort" value="{{ old('sort_order', 0) }}" min="0">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-6 col-md-2">
                                 <button type="submit" class="btn btn-primary btn-sm w-100">Tambah</button>
                             </div>
                         </div>
@@ -206,7 +243,7 @@
                     @else
                         <ul class="list-group list-group-flush">
                             @foreach($server->checklistItems as $item)
-                                <li class="list-group-item d-flex align-items-center gap-2 px-0">
+                                <li class="list-group-item d-flex flex-wrap align-items-center gap-2 px-0 py-3">
                                     <form action="{{ route('server.checklist.toggle', [$server, $item]) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('PATCH')
@@ -218,7 +255,7 @@
                                             @endif
                                         </button>
                                     </form>
-                                    <span class="{{ $item->is_checked ? 'text-decoration-line-through text-muted' : '' }} flex-grow-1">{{ $item->title }}</span>
+                                    <span class="{{ $item->is_checked ? 'text-decoration-line-through text-muted' : '' }} flex-grow-1 min-w-0">{{ $item->title }}</span>
                                     <form action="{{ route('server.checklist.destroy', [$server, $item]) }}" method="POST" class="d-inline form-delete-checklist">
                                         @csrf
                                         @method('DELETE')
@@ -289,20 +326,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     var selectAll = document.getElementById('component-select-all');
+    var selectAllMob = document.getElementById('component-select-all-mob');
     var checkboxes = document.querySelectorAll('.component-cb');
     var bulkBtn = document.querySelector('.form-bulk-delete-components-btn');
     var bulkForm = document.getElementById('form-bulk-delete-components');
-    if (selectAll && checkboxes.length) {
-        selectAll.addEventListener('change', function() {
-            checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
-            if (bulkBtn) bulkBtn.disabled = !selectAll.checked;
-        });
+    function updateBulkState() {
+        var any = Array.prototype.slice.call(checkboxes).some(function(c) { return c.checked; });
+        var all = any && checkboxes.length === Array.prototype.slice.call(checkboxes).filter(function(c) { return c.checked; }).length;
+        if (bulkBtn) bulkBtn.disabled = !any;
+        if (selectAll) selectAll.checked = all;
+        if (selectAllMob) selectAllMob.checked = all;
+    }
+    function setAll(checked) {
+        checkboxes.forEach(function(cb) { cb.checked = checked; });
+        if (bulkBtn) bulkBtn.disabled = !checked;
+        if (selectAll) selectAll.checked = checked;
+        if (selectAllMob) selectAllMob.checked = checked;
+    }
+    if (checkboxes.length) {
+        if (selectAll) selectAll.addEventListener('change', function() { setAll(selectAll.checked); });
+        if (selectAllMob) selectAllMob.addEventListener('change', function() { setAll(selectAllMob.checked); });
         checkboxes.forEach(function(cb) {
-            cb.addEventListener('change', function() {
-                var any = Array.prototype.slice.call(checkboxes).some(function(c) { return c.checked; });
-                if (bulkBtn) bulkBtn.disabled = !any;
-                if (selectAll) selectAll.checked = any && checkboxes.length === Array.prototype.slice.call(checkboxes).filter(function(c) { return c.checked; }).length;
-            });
+            cb.addEventListener('change', updateBulkState);
         });
     }
     if (bulkForm && bulkBtn) {

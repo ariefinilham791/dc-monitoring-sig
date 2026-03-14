@@ -8,7 +8,7 @@
     <section class="position-relative p-3 bg-gradient2">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-12">
                     <div class="page-title">
                         <h3 class="my-0">Account Settings</h3>
                         <p class="mt-1 fw-medium">Change your account settings</p>
@@ -16,26 +16,26 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-lg-12">
+                <div class="col-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body p-3 p-md-4">
                             <div class="row">
-                                <div class="col-lg-3">
-                                    <!-- menu start -->
-                                    <ul class="nav navtab-bg nav-pills flex-column">
-                                        <li class="nav-item">
+                                <div class="col-12 col-lg-3 mb-3 mb-lg-0">
+                                    <!-- menu start: horizontal scroll on mobile -->
+                                    <ul class="nav navtab-bg nav-pills flex-row flex-lg-column overflow-auto flex-nowrap gap-1 pb-2 pb-lg-0" style="-webkit-overflow-scrolling: touch;">
+                                        <li class="nav-item flex-shrink-0">
                                             <a href="#account" data-bs-toggle="tab" aria-expanded="false"
                                                class="nav-link active">
                                                 <span>Account</span>
                                             </a>
                                         </li>
-                                        <li class="nav-item my-2">
+                                        <li class="nav-item flex-shrink-0">
                                             <a href="#password" data-bs-toggle="tab" aria-expanded="true"
                                                class="nav-link">
                                                 <span>Password</span>
                                             </a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li class="nav-item flex-shrink-0">
                                             <a href="#notifications-form" data-bs-toggle="tab" aria-expanded="false"
                                                class="nav-link">
                                                 <span>Notifications</span>
@@ -44,10 +44,10 @@
                                     </ul>
                                     <!-- menu end -->
                                 </div>
-                                <div class="col-lg-9">
+                                <div class="col-12 col-lg-9">
                                     <div class="tab-content p-0">
                                         <!-- account form start -->
-                                        <div class="tab-pane fade show active px-3" id="account">
+                                        <div class="tab-pane fade show active px-0 px-md-3" id="account">
                                             <h4 class="mt-0">Account Information</h4>
 
                                             <form action="#" class="account-form">
@@ -72,7 +72,7 @@
 
                                                 <!-- basic info start -->
                                                 <div class="row align-items-center">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-12 col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="name"
                                                                    class="form-label">Name<small>*</small></label>
@@ -89,7 +89,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-lg-6">
+                                                    <div class="col-12 col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="display_name" class="form-label">Display
                                                                 name</label>
@@ -113,7 +113,7 @@
 
                                                 <!-- privacy settings start -->
                                                 <div class="row my-3">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-12">
                                                         <div class="mb-3">
                                                             <label class="form-label">Profile Visibility</label>
 
@@ -140,7 +140,7 @@
                                                             </small>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-12 mt-2">
+                                                    <div class="col-12 mt-2">
                                                         <div class="mb-3 mb-0">
                                                             <label class="form-label">Contact Info
                                                                 Visibility</label>
@@ -175,22 +175,20 @@
 
                                                 <!-- account removal start -->
                                                 <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="row align-items-center my-2">
-                                                            <div class="col">
+                                                    <div class="col-12">
+                                                        <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 my-2">
+                                                            <div>
                                                                 <label class="form-label mb-0">
                                                                     Remove account
                                                                 </label>
-                                                                <small class="form-text text-muted">
+                                                                <small class="form-text text-muted d-block">
                                                                     By removing your account you will lose all your data
                                                                 </small>
                                                             </div>
-                                                            <div class="col-lg-auto text-end">
-                                                                <button type="button"
-                                                                        class="btn btn-outline-danger btn-sm">Remove
-                                                                    Account
-                                                                </button>
-                                                            </div>
+                                                            <button type="button"
+                                                                    class="btn btn-outline-danger btn-sm flex-shrink-0">Remove
+                                                                Account
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -200,7 +198,7 @@
 
                                                 <!-- save start -->
                                                 <div class="row mt-2">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-12">
                                                         <button type="submit" class="btn btn-primary">Save Changes
                                                         </button>
                                                     </div>
@@ -211,7 +209,7 @@
                                         <!-- account form end -->
 
                                         <!-- password start -->
-                                        <div class="tab-pane fade px-3" id="password" style="min-height: 600px;">
+                                        <div class="tab-pane fade px-0 px-md-3" id="password" style="min-height: 280px;">
                                             <h4 class="mt-0">Password</h4>
 
                                             <!-- form start -->
@@ -241,7 +239,7 @@
 
                                                 <!-- save start -->
                                                 <div class="row mt-3">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-12">
                                                         <button type="submit" class="btn btn-primary">Update Password
                                                         </button>
                                                     </div>
@@ -253,8 +251,8 @@
                                         <!-- password end -->
 
                                         <!-- notifications start -->
-                                        <div class="tab-pane fade px-3" id="notifications-form"
-                                             style="min-height: 600px;">
+                                        <div class="tab-pane fade px-0 px-md-3" id="notifications-form"
+                                             style="min-height: 280px;">
                                             <h4 class="mt-0">Notifications</h4>
 
                                             <!-- form start -->
@@ -331,7 +329,7 @@
 
                                                 <!-- save start -->
                                                 <div class="row mt-3">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-12">
                                                         <button type="submit" class="btn btn-primary">Update
                                                             Preferences
                                                         </button>
@@ -357,8 +355,8 @@
     <section class="section py-4 position-relative">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col">
-                    <ul class="list-inline list-with-separator mb-0">
+                <div class="col-12 col-md">
+                    <ul class="list-inline list-with-separator mb-0 flex-wrap">
                         <li class="list-inline-item me-0"><a href="#">About</a></li>
                         <li class="list-inline-item me-0"><a href="#">Privacy</a></li>
                         <li class="list-inline-item me-0"><a href="#">Terms</a></li>

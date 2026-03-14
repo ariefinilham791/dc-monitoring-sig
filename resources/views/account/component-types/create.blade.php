@@ -12,16 +12,16 @@
             </div>
 
             <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form action="{{ route('component-type.store') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="name" class="form-label">Nama tipe *</label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required maxlength="100" placeholder="Disk, RAM, CPU, PSU">
                                 @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="slug" class="form-label">Slug (opsional)</label>
                                 <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" maxlength="100" placeholder="disk, ram">
                             </div>
@@ -30,9 +30,9 @@
                             <label class="form-label">Atribut (field dinamis)</label>
                             <p class="text-muted small">Nama field yang muncul saat input component: Size, Serial Number, Capacity, dll.</p>
                             <div id="attr-rows">
-                                <div class="input-group mb-2 attr-row">
+                                <div class="input-group mb-2 attr-row flex-wrap">
                                     <input type="text" class="form-control" name="attr_name[]" placeholder="Mis. Size">
-                                    <button type="button" class="btn btn-outline-secondary btn-remove-attr">Hapus</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-remove-attr flex-shrink-0">Hapus</button>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary mt-1" id="btn-add-attr">+ Tambah atribut</button>
@@ -41,7 +41,7 @@
                             <label for="sort_order" class="form-label">Urutan</label>
                             <input type="number" class="form-control" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" style="max-width: 120px;">
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                             <a href="{{ route('component-type.index') }}" class="btn btn-outline-secondary">Batal</a>
                         </div>
@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var container = document.getElementById('attr-rows');
     document.getElementById('btn-add-attr').addEventListener('click', function() {
         var row = document.createElement('div');
-        row.className = 'input-group mb-2 attr-row';
+        row.className = 'input-group mb-2 attr-row flex-wrap';
         row.innerHTML = '<input type="text" class="form-control" name="attr_name[]" placeholder="Nama atribut">' +
-            '<button type="button" class="btn btn-outline-secondary btn-remove-attr">Hapus</button>';
+            '<button type="button" class="btn btn-outline-secondary btn-remove-attr flex-shrink-0">Hapus</button>';
         container.appendChild(row);
         row.querySelector('.btn-remove-attr').onclick = function() { row.remove(); };
     });

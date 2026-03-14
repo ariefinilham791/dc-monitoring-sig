@@ -15,16 +15,16 @@
             </div>
 
             <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <form action="{{ route('server.store') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="hostname" class="form-label">Hostname <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('hostname') is-invalid @enderror" id="hostname" name="hostname" value="{{ old('hostname') }}" required maxlength="100" placeholder="server01">
                                 @error('hostname')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="ip_address" class="form-label">IP Address</label>
                                 <input type="text" class="form-control @error('ip_address') is-invalid @enderror" id="ip_address" name="ip_address" value="{{ old('ip_address') }}" maxlength="45" placeholder="192.168.1.1">
                                 @error('ip_address')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -81,7 +81,7 @@
                             <input type="number" class="form-control @error('sort_order') is-invalid @enderror" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0">
                             @error('sort_order')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                             <a href="{{ route('server.index') }}" class="btn btn-outline-secondary">Batal</a>
                         </div>

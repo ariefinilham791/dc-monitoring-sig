@@ -120,22 +120,22 @@
 
     {{-- Modal Tambah Server --}}
     <div class="modal fade" id="modalAddServer" tabindex="-1" aria-labelledby="modalAddServerLabel" aria-hidden="true" @if($errors->any()) data-bs-open="1" @endif>
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title" id="modalAddServerLabel">Tambah Server</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body pt-0">
+                <div class="modal-body pt-0 pb-4">
                     <form action="{{ route('server.store') }}" method="POST" id="formAddServer">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="hostname" class="form-label">Hostname <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('hostname') is-invalid @enderror" id="hostname" name="hostname" value="{{ old('hostname') }}" required maxlength="100" placeholder="server01">
                                 @error('hostname')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-12 col-md-6 mb-3">
                                 <label for="ip_address" class="form-label">IP Address</label>
                                 <input type="text" class="form-control @error('ip_address') is-invalid @enderror" id="ip_address" name="ip_address" value="{{ old('ip_address') }}" maxlength="45" placeholder="192.168.1.1">
                                 @error('ip_address')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -192,7 +192,7 @@
                             <input type="number" class="form-control @error('sort_order') is-invalid @enderror" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0">
                             @error('sort_order')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <div class="d-flex gap-2 justify-content-end">
+                        <div class="d-flex flex-wrap gap-2 justify-content-end">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>

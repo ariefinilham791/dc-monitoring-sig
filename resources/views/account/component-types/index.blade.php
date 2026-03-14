@@ -15,7 +15,8 @@
 
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-0">
-                    <div class="table-responsive">
+                    {{-- Desktop: table --}}
+                    <div class="d-none d-md-block table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
@@ -55,6 +56,36 @@
                                 @endforelse
                             </tbody>
                         </table>
+                    </div>
+                    {{-- Mobile: cards --}}
+                    <div class="d-md-none p-3">
+                        @forelse($componentTypes as $ct)
+                            <div class="card border mb-3">
+                                <div class="card-body">
+                                    <h6 class="mb-1 fw-semibold">{{ $ct->name }}</h6>
+                                    <p class="text-muted small mb-2"><code>{{ $ct->slug }}</code></p>
+                                    @if(!empty($ct->attributes))
+                                        <div class="d-flex flex-wrap gap-1 mb-3">
+                                            @foreach($ct->attributes as $attr)
+                                                <span class="badge bg-light text-dark">{{ $attr['name'] ?? $attr['slug'] ?? '' }}</span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <p class="text-muted small mb-3">–</p>
+                                    @endif
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a href="{{ route('component-type.edit', $ct) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        <form action="{{ route('component-type.destroy', $ct) }}" method="POST" class="d-inline form-delete-ct">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-center text-muted py-4 mb-0">Belum ada tipe. Klik Tambah Tipe (mis. Disk, RAM, CPU, PSU).</p>
+                        @endforelse
                     </div>
                 </div>
             </div>

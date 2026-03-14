@@ -48,6 +48,11 @@
         window.addEventListener('load', hideLoader);
         document.addEventListener('DOMContentLoaded', function() { setTimeout(hideLoader, 150); });
     }
+    // Saat user pakai tombol Back browser, halaman bisa di-restore dari bfcache
+    // tanpa trigger load/DOMContentLoaded lagi → loader tetap muter. Pastikan sembunyikan.
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted) hideLoader();
+    });
     document.addEventListener('click', function(e) {
         var a = e.target.closest('a[href]');
         if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
@@ -64,10 +69,16 @@
 @vite(['resources/js/theme.js','resources/js/swiper.js'])
 @yield('script-bottom')
 <style>
-.app-body { background: #e8eef5 !important; min-height: 100vh; }
+/* Base responsive: no horizontal scroll, touch-friendly */
+.app-body { background: #e8eef5 !important; min-height: 100vh; overflow-x: hidden; }
 .app-body .bg-gradient2 { background: #e8eef5 !important; }
 .app-body .card { background: #fff; }
 .app-body .navbar { background: #fff !important; }
+/* Touch targets on mobile: comfortable tap size */
+@media (max-width: 991.98px) {
+    .app-body .btn:not(.btn-sm):not(.btn-link) { min-height: 44px; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .app-body .form-control:not(.form-control-sm), .app-body .form-select:not(.form-select-sm) { min-height: 44px; }
+}
 
 /* Status pills — pilihan status yang rapi */
 .status-pills {
