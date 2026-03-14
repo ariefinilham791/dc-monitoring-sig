@@ -1,0 +1,76 @@
+/*
+Template Name: Prompt Kit
+Author: CoderThemes
+Version: 2.0.0
+Website: https://coderthemes.com/
+Contact: support@coderthemes.com
+File: Main Css File
+*/
+ 
+
+
+// Google Fonts
+@import "custom/fonts";
+
+//CORE FILES
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "config/variables";
+@import "config/custom-variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// general
+@import "custom/general";
+
+// components
+@import "components/accordions";
+@import "components/alerts";
+@import "components/badge";
+@import "components/backgrounds";
+@import "components/breadcrumb";
+@import "components/buttons";
+@import "components/card";
+@import "components/dropdown";
+@import "components/forms";
+@import "components/modal";
+@import "components/navbar";
+@import "components/nav";
+@import "components/pagination";
+@import "components/popover";
+@import "components/progress";
+@import "components/reboot";
+@import "components/tables";
+@import "components/type";
+@import "components/helper";
+@import "components/list";
+@import "components/widgets";
+@import "components/custom-checkbox";
+@import "components/custom-radio";
+@import "components/print";
+@import "components/preloader";
+
+// custom components
+@import "components/icons";
+@import "components/avatar";
+@import "components/ribbon";
+
+// theme components
+@import "components/header";
+@import "components/hero";
+@import "components/features";
+@import "components/testimonials";
+
+
+// custom plugins
+@import "custom/plugins/rateit";
+@import "custom/plugins/gallery";
+@import "custom/plugins/daterange";
+@import "custom/plugins/leaflet";
+@import "custom/plugins/jarallex";
+
+// structure
+@import "custom/structure/footer";
+
+// pages
+@import "custom/pages/docs";
+@import "custom/pages/portfolio";
