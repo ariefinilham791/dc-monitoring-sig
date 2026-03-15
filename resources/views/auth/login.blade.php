@@ -38,12 +38,6 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                                        <label class="form-check-label text-muted small" for="remember">Ingat saya</label>
-                                    </div>
-                                </div>
-
                                 <button type="submit" class="btn btn-primary btn-lg w-100">Masuk</button>
                             </form>
                         </div>

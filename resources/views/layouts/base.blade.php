@@ -15,10 +15,14 @@
 </head>
 
 <body>
-    {{-- Global page loader --}}
+    {{-- Full page loader: hanya saat first load --}}
     <div class="page-loader" id="pageLoader" aria-hidden="true">
         <div class="page-loader-spinner"></div>
-        <span class="page-loader-text">Memuat...</span>
+    </div>
+
+    {{-- Content loader: hanya area di bawah header saat pindah menu (tanpa teks) --}}
+    <div class="content-loader" id="contentLoader" aria-hidden="true">
+        <div class="content-loader-spinner"></div>
     </div>
 
     <div class="page-content-wrap">
@@ -32,6 +36,7 @@
 @yield('script')
 <script>
 (function() {
+    var contentLoader = document.getElementById('contentLoader');
     function hideLoader() {
         document.body.classList.add('page-loaded');
         var el = document.getElementById('pageLoader');
@@ -42,16 +47,30 @@
         var el = document.getElementById('pageLoader');
         if (el) el.setAttribute('aria-hidden', 'false');
     }
+    function hideContentLoader() {
+        if (contentLoader) {
+            contentLoader.classList.remove('content-loader--active');
+            contentLoader.setAttribute('aria-hidden', 'true');
+        }
+    }
+    function showContentLoader() {
+        if (!contentLoader) return;
+        var header = document.querySelector('.page-content-wrap .dh') || document.querySelector('.page-content-wrap .dh-nav') || document.querySelector('.page-content-wrap header');
+        var top = 60;
+        if (header && header.offsetHeight) top = Math.max(top, header.offsetHeight);
+        contentLoader.style.top = top + 'px';
+        contentLoader.classList.add('content-loader--active');
+        contentLoader.setAttribute('aria-hidden', 'false');
+    }
     if (document.readyState === 'complete') {
         hideLoader();
+        hideContentLoader();
     } else {
-        window.addEventListener('load', hideLoader);
-        document.addEventListener('DOMContentLoaded', function() { setTimeout(hideLoader, 150); });
+        window.addEventListener('load', function() { hideLoader(); hideContentLoader(); });
+        document.addEventListener('DOMContentLoaded', function() { setTimeout(function() { hideLoader(); hideContentLoader(); }, 150); });
     }
-    // Saat user pakai tombol Back browser, halaman bisa di-restore dari bfcache
-    // tanpa trigger load/DOMContentLoaded lagi → loader tetap muter. Pastikan sembunyikan.
     window.addEventListener('pageshow', function(e) {
-        if (e.persisted) hideLoader();
+        if (e.persisted) { hideLoader(); hideContentLoader(); }
     });
     document.addEventListener('click', function(e) {
         var a = e.target.closest('a[href]');
@@ -60,7 +79,7 @@
         if (!href || href === '#' || href.indexOf('javascript:') === 0) return;
         try {
             var u = new URL(href, window.location.origin);
-            if (u.origin === window.location.origin) showLoader();
+            if (u.origin === window.location.origin) showContentLoader();
         } catch (err) {}
     }, true);
 })();
@@ -113,7 +132,7 @@
 .status-pill-info:hover { background: #bbdefb; color: #0d47a1; }
 .status-pill-input:checked + .status-pill-info { background: #1565c0; color: #fff; border-color: #1565c0; }
 
-/* Page loader */
+/* Page loader (full screen, first load) */
 .page-loader {
     position: fixed;
     inset: 0;
@@ -138,11 +157,40 @@ body.page-loaded .page-loader {
     border-radius: 50%;
     animation: page-loader-spin 0.8s linear infinite;
 }
-.page-loader-text {
-    margin-top: 12px;
-    font-size: 0.875rem;
-    color: #6c757d;
+
+/* Content loader: hanya area di bawah header, tanpa teks */
+.content-loader {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 60px;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(232, 238, 245, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
+.content-loader.content-loader--active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+.content-loader-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(13, 110, 253, 0.2);
+    border-top-color: #0d6efd;
+    border-radius: 50%;
+    animation: page-loader-spin 0.6s linear infinite;
+}
+
 @keyframes page-loader-spin {
     to { transform: rotate(360deg); }
 }
