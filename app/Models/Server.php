@@ -37,7 +37,7 @@ class Server extends Model
 
     public function components()
     {
-        return $this->hasMany(ServerComponent::class)->orderBy('id');
+        return $this->hasMany(ServerComponent::class)->orderBy('sort_order')->orderBy('id');
     }
 
     public function checklistItems()

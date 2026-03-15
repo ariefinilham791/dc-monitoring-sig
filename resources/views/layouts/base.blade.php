@@ -74,7 +74,7 @@
     });
     document.addEventListener('click', function(e) {
         var a = e.target.closest('a[href]');
-        if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+        if (!a || a.target === '_blank' || a.hasAttribute('download') || a.getAttribute('data-skip-loader')) return;
         var href = (a.getAttribute('href') || '').trim();
         if (!href || href === '#' || href.indexOf('javascript:') === 0) return;
         try {

@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/checklist', [ChecklistController::class, 'index'])->name('checklist.index');
     Route::get('/account/checklist/history', [ChecklistController::class, 'history'])->name('checklist.history');
     Route::get('/account/checklist/log', [ChecklistController::class, 'log'])->name('checklist.log');
-    Route::get('/account/checklist/log/export', [ChecklistController::class, 'exportLog'])->name('checklist.log.export');
+    Route::get('/account/checklist/log/export', [ChecklistController::class, 'exportLog'])->name('checklist.log.export')->middleware('throttle:5,1');
     Route::get('/account/checklist/fill/{serverRoundCheck}', [ChecklistController::class, 'fill'])->name('checklist.fill');
     Route::post('/account/checklist/fill/{serverRoundCheck}', [ChecklistController::class, 'store'])->name('checklist.store');
     Route::resource('account/component-type', ComponentTypeController::class)->names('component-type')->except(['show']);

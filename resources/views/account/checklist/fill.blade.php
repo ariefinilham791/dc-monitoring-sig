@@ -6,6 +6,21 @@
 .checklist-mobile-spacer { height: 88px; }
 .checklist-fill-form .card-body { font-size: 0.875rem; }
 .checklist-fill-form .form-label { font-size: 0.75rem; }
+.checklist-fill-form .checklist-row-fields { --bs-gutter-x: 0.5rem; --bs-gutter-y: 0.5rem; }
+.checklist-status-btns { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; }
+.checklist-status-btns .btn { font-size: 0.8125rem; border-width: 1px; }
+.checklist-status-btns .btn-status-pending { color: #5a6268; border-color: #ced4da; }
+.checklist-status-btns .btn-status-pending:hover { background: #e9ecef; border-color: #adb5bd; }
+.checklist-status-btns .btn-check:checked + .btn-status-pending { background: #5a6268; color: #fff; border-color: #5a6268; }
+.checklist-status-btns .btn-status-ok { color: #146c43; border-color: #a3cfbb; }
+.checklist-status-btns .btn-status-ok:hover { background: #d1e7dd; border-color: #75b798; }
+.checklist-status-btns .btn-check:checked + .btn-status-ok { background: #146c43; color: #fff; border-color: #146c43; }
+.checklist-status-btns .btn-status-warning { color: #b66200; border-color: #ffc896; }
+.checklist-status-btns .btn-status-warning:hover { background: #ffe5d0; border-color: #fd7e14; }
+.checklist-status-btns .btn-check:checked + .btn-status-warning { background: #e8590c; color: #fff; border-color: #e8590c; }
+.checklist-status-btns .btn-status-error { color: #b02a37; border-color: #f1aeb5; }
+.checklist-status-btns .btn-status-error:hover { background: #f8d7da; border-color: #dc3545; }
+.checklist-status-btns .btn-check:checked + .btn-status-error { background: #b02a37; color: #fff; border-color: #b02a37; }
 </style>
 @endsection
 
@@ -36,37 +51,49 @@
                     <div class="row g-2">
                         @foreach($server->components as $comp)
                             @php
-                                $item = $itemsByComponent->get($comp->id);
+                                $item = $itemsByComponent->get((int) $comp->id);
                                 $result = old("result.{$comp->id}", $item ? $item->result : 'pending');
                                 $usedPct = old("used_pct.{$comp->id}", $item && $item->used_pct !== null ? $item->used_pct : '');
                                 $freePct = old("free_pct.{$comp->id}", $item && $item->free_pct !== null ? $item->free_pct : '');
                                 $notes = old("notes.{$comp->id}", $item ? $item->notes : '');
+                                $typeSlug = strtolower(trim($comp->componentType->slug ?? ''));
+                                $isStatusOnly = !empty($comp->componentType->status_only);
                             @endphp
                             <div class="col-12">
                                 <div class="card border-0 shadow-sm">
                                     <div class="card-header bg-light border-0 py-2 px-3">
                                         <span class="fw-600 small">{{ $comp->display_name }}</span>@if($comp->spec_summary)<span class="text-muted small"> ({{ $comp->spec_summary }})</span>@endif
+                                        @if($isStatusOnly && $typeSlug === 'psu')<span class="text-muted small d-block mt-1">Cek status saja; daya (Watt) dari spesifikasi di atas.</span>@endif
+                                        @if($isStatusOnly && in_array($typeSlug, ['disk', 'volume', 'storage']))<span class="text-muted small d-block mt-1">Cek status saja (volume/disk).</span>@endif
                                     </div>
                                     <div class="card-body p-3">
-                                        <div class="row g-2 align-items-end">
-                                            <div class="col-12 col-sm-6 col-md-4">
-                                                <label class="form-label small text-muted mb-0">Hasil</label>
-                                                <select name="result[{{ $comp->id }}]" class="form-select form-select-sm" required>
-                                                    @foreach(\App\Models\ServerRoundCheckItem::resultLabels() as $val => $label)
-                                                        <option value="{{ $val }}" {{ $result === $val ? 'selected' : '' }}>{{ $label }}</option>
-                                                    @endforeach
-                                                </select>
+                                        <div class="row checklist-row-fields align-items-end">
+                                            <div class="col-auto">
+                                                <label class="form-label small text-muted mb-1 d-block">Status</label>
+                                                <div class="btn-group btn-group-sm checklist-status-btns" role="group">
+                                                    @php $labels = \App\Models\ServerRoundCheckItem::resultLabels(); @endphp
+                                                    <input type="radio" class="btn-check" name="result[{{ $comp->id }}]" value="pending" id="result-{{ $comp->id }}-pending" {{ $result === 'pending' ? 'checked' : '' }}>
+                                                    <label class="btn btn-outline-secondary btn-status-pending" for="result-{{ $comp->id }}-pending">{{ $labels['pending'] }}</label>
+                                                    <input type="radio" class="btn-check" name="result[{{ $comp->id }}]" value="ok" id="result-{{ $comp->id }}-ok" {{ $result === 'ok' ? 'checked' : '' }}>
+                                                    <label class="btn btn-outline-success btn-status-ok" for="result-{{ $comp->id }}-ok">{{ $labels['ok'] }}</label>
+                                                    <input type="radio" class="btn-check" name="result[{{ $comp->id }}]" value="warning" id="result-{{ $comp->id }}-warning" {{ $result === 'warning' ? 'checked' : '' }}>
+                                                    <label class="btn btn-outline-warning btn-status-warning" for="result-{{ $comp->id }}-warning">{{ $labels['warning'] }}</label>
+                                                    <input type="radio" class="btn-check" name="result[{{ $comp->id }}]" value="error" id="result-{{ $comp->id }}-error" {{ $result === 'error' ? 'checked' : '' }}>
+                                                    <label class="btn btn-outline-danger btn-status-error" for="result-{{ $comp->id }}-error">{{ $labels['error'] }}</label>
+                                                </div>
                                             </div>
-                                            <div class="col-6 col-sm-3 col-md-2">
-                                                <label class="form-label small text-muted mb-0">% Terpakai</label>
+                                            @if(!$isStatusOnly)
+                                            <div class="col-6 col-sm-4 col-md-2">
+                                                <label class="form-label small text-muted mb-1">% Terpakai</label>
                                                 <input type="number" name="used_pct[{{ $comp->id }}]" class="form-control form-control-sm" min="0" max="100" step="0.01" placeholder="-" value="{{ $usedPct !== '' && $usedPct !== null ? $usedPct : '' }}" inputmode="decimal">
                                             </div>
-                                            <div class="col-6 col-sm-3 col-md-2">
-                                                <label class="form-label small text-muted mb-0">% Kosong</label>
+                                            <div class="col-6 col-sm-4 col-md-2">
+                                                <label class="form-label small text-muted mb-1">% Kosong</label>
                                                 <input type="number" name="free_pct[{{ $comp->id }}]" class="form-control form-control-sm" min="0" max="100" step="0.01" placeholder="-" value="{{ $freePct !== '' && $freePct !== null ? $freePct : '' }}" inputmode="decimal">
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="form-label small text-muted mb-0">Catatan</label>
+                                            @endif
+                                            <div class="col min-w-0">
+                                                <label class="form-label small text-muted mb-1">Catatan</label>
                                                 <input type="text" name="notes[{{ $comp->id }}]" class="form-control form-control-sm" maxlength="1000" placeholder="Opsional" value="{{ $notes }}">
                                             </div>
                                         </div>
@@ -96,4 +123,24 @@
             @endif
         </div>
     </section>
+@endsection
+
+@section('script-bottom')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('checklist-form');
+    if (form) {
+        var pristine = true;
+        form.addEventListener('change', function() { pristine = false; });
+        form.addEventListener('input', function() { pristine = false; });
+        form.querySelectorAll('.checklist-status-btns .btn').forEach(function(btn) {
+            btn.addEventListener('click', function() { pristine = false; });
+        });
+        window.addEventListener('beforeunload', function(e) {
+            if (!pristine) e.preventDefault();
+        });
+        form.addEventListener('submit', function() { pristine = true; });
+    }
+});
+</script>
 @endsection

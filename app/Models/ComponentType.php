@@ -7,10 +7,11 @@ use Illuminate\Support\Str;
 
 class ComponentType extends Model
 {
-    protected $fillable = ['name', 'slug', 'attributes', 'sort_order'];
+    protected $fillable = ['name', 'slug', 'attributes', 'status_only', 'sort_order'];
 
     protected $casts = [
         'attributes' => 'array',
+        'status_only' => 'boolean',
         'sort_order' => 'integer',
     ];
 

@@ -37,6 +37,13 @@
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary mt-1" id="btn-add-attr">+ Tambah atribut</button>
                         </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="status_only" name="status_only" value="1" {{ old('status_only') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="status_only">Hanya status (tanpa % Terpakai / % Kosong)</label>
+                            </div>
+                            <p class="text-muted small mb-0 mt-1">Centang untuk tipe seperti Disk/Volume dan PSU — di checklist hanya isi Status (OK, Warning, Error).</p>
+                        </div>
                         <div class="mb-4">
                             <label for="sort_order" class="form-label">Urutan</label>
                             <input type="number" class="form-control" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" style="max-width: 120px;">

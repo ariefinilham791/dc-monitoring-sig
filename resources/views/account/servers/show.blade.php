@@ -145,8 +145,8 @@
                                                         –
                                                     @endif
                                                 </td>
-                                                <td class="text-end">
-                                                    <div class="d-flex gap-1 justify-content-end align-items-center flex-wrap">
+                                                <td class="text-end spec-td-action">
+                                                    <div class="d-flex gap-1 justify-content-end align-items-center flex-nowrap">
                                                         <button type="button" class="btn btn-sm btn-outline-secondary btn-duplicate-component" title="Duplikat"
                                                             data-type-id="{{ $comp->component_type_id }}"
                                                             data-type-name="{{ e($comp->componentType->name ?? '') }}"
@@ -239,13 +239,15 @@
             #modalEditComponent .spec-label { font-size: 0.8125rem; font-weight: 600; color: #475569; }
             .spec-form .spec-dynamic-wrap .spec-label { color: #475569; }
             .spec-form-inner .form-control:focus, .spec-form-inner .form-select:focus { border-color: #86b7fe; box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15); }
-            .spec-table { font-size: 0.8125rem; }
-            .spec-table .spec-th-cb { width: 2.25rem; padding: 0.5rem 0.75rem; }
-            .spec-table .spec-th-type { padding: 0.5rem 0.75rem; min-width: 8rem; }
-            .spec-table .spec-th-detail { padding: 0.5rem 0.75rem; max-width: 20rem; }
-.spec-table .spec-th-action { min-width: 8rem; padding: 0.5rem 0.75rem; }
-.spec-table td { padding: 0.5rem 0.75rem; vertical-align: middle; }
-.spec-table .spec-detail { max-width: 20rem; word-break: break-word; color: #495057; }
+            .spec-table { font-size: 0.8125rem; table-layout: fixed; width: 100%; min-width: 32rem; }
+            .spec-table .spec-th-cb { width: 2.5rem; padding: 0.25rem 0.5rem; }
+            .spec-table .spec-th-type { width: 12rem; padding: 0.25rem 0.75rem; }
+            .spec-table .spec-th-detail { padding: 0.25rem 0.75rem; }
+            .spec-table .spec-th-action { width: 14rem; min-width: 12rem; padding: 0.25rem 0.75rem; }
+            .spec-table td { padding: 0.25rem 0.75rem; vertical-align: middle; }
+            .spec-table td.spec-detail { word-break: break-word; color: #495057; }
+            .spec-table .spec-td-action { white-space: nowrap; }
+            .spec-table .spec-td-action .btn { padding: 0.25rem 0.5rem; font-size: 0.75rem; flex-shrink: 0; }
             </style>
 
             {{-- Modal Duplicate Component --}}

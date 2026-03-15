@@ -66,7 +66,7 @@ class ChecklistController extends Controller
         $serverRoundCheck->load(['server.components.componentType', 'checklistRound', 'checkItems']);
         $server = $serverRoundCheck->server;
         $round = $serverRoundCheck->checklistRound;
-        $itemsByComponent = $serverRoundCheck->checkItems->keyBy('server_component_id');
+        $itemsByComponent = $serverRoundCheck->checkItems->keyBy(fn ($item) => (int) $item->server_component_id);
 
         return view('account.checklist.fill', [
             'serverRoundCheck' => $serverRoundCheck,
@@ -131,21 +131,37 @@ class ChecklistController extends Controller
         $roundId = $request->get('round_id');
         $rounds = ChecklistRound::orderBy('year', 'desc')->orderBy('month', 'desc')->get();
 
+        $round = null;
+        $serverRoundChecksPaginator = null;
+
         if ($roundId) {
             $round = ChecklistRound::find($roundId);
             if (! $round) {
                 return redirect()->route('checklist.log')->with('error', 'Round tidak ditemukan.');
             }
-            $round->load(['serverRoundChecks.server.components.componentType', 'serverRoundChecks.checkItems.serverComponent.componentType']);
-            return view('account.checklist.log', compact('rounds', 'round'));
+            $serverRoundChecksPaginator = ServerRoundCheck::query()
+                ->where('checklist_round_id', $round->id)
+                ->with(['server.components.componentType', 'checkItems.serverComponent.componentType'])
+                ->join('servers', 'servers.id', '=', 'server_round_checks.server_id')
+                ->orderBy('servers.hostname')
+                ->select('server_round_checks.*')
+                ->paginate(10)
+                ->withQueryString();
+        } else {
+            $round = $rounds->first();
+            if ($round) {
+                $serverRoundChecksPaginator = ServerRoundCheck::query()
+                    ->where('checklist_round_id', $round->id)
+                    ->with(['server.components.componentType', 'checkItems.serverComponent.componentType'])
+                    ->join('servers', 'servers.id', '=', 'server_round_checks.server_id')
+                    ->orderBy('servers.hostname')
+                    ->select('server_round_checks.*')
+                    ->paginate(10)
+                    ->withQueryString();
+            }
         }
 
-        $round = $rounds->first();
-        if ($round) {
-            $round->load(['serverRoundChecks.server.components.componentType', 'serverRoundChecks.checkItems.serverComponent.componentType']);
-        }
-
-        return view('account.checklist.log', compact('rounds', 'round'));
+        return view('account.checklist.log', compact('rounds', 'round', 'serverRoundChecksPaginator'));
     }
 
     public function exportLog(Request $request)
@@ -154,13 +170,20 @@ class ChecklistController extends Controller
         if (! $roundId) {
             return redirect()->route('checklist.log')->with('error', 'Pilih periode terlebih dahulu.');
         }
-        $round = ChecklistRound::find($roundId);
+        $round = ChecklistRound::with('serverRoundChecks.checkItems')->find($roundId);
         if (! $round) {
             return redirect()->route('checklist.log')->with('error', 'Periode tidak ditemukan.');
         }
+        $totalItems = $round->serverRoundChecks->sum(fn ($src) => $src->checkItems->count());
+        if ($totalItems === 0) {
+            return redirect()->route('checklist.log', ['round_id' => $round->id])
+                ->with('error', 'Belum ada data checklist untuk periode ini. Isi checklist dulu.');
+        }
         $attributeColumns = ChecklistLogExport::buildAttributeColumns($round);
         $export = new ChecklistLogExport($round, $attributeColumns);
-        $fileName = 'log-checklist-' . $round->year . '-' . str_pad((string) $round->month, 2, '0', STR_PAD_LEFT) . '.xlsx';
+        $safePeriod = preg_replace('/[^a-zA-Z0-9\-]/', '-', $round->period_label);
+        $safePeriod = trim(preg_replace('/-+/', '-', $safePeriod), '-');
+        $fileName = 'Data-Center-Daily-Monitoring-' . ($safePeriod ?: $round->year . '-' . str_pad((string) $round->month, 2, '0', STR_PAD_LEFT)) . '.xlsx';
         return Excel::download($export, $fileName, \Maatwebsite\Excel\Excel::XLSX);
     }
 }

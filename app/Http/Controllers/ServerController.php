@@ -80,6 +80,8 @@ class ServerController extends Controller
             }
         }
         $validated['values'] = $values;
+        $maxOrder = (int) ServerComponent::where('server_id', $server->id)->max('sort_order');
+        $validated['sort_order'] = $maxOrder + 1;
         ServerComponent::create($validated);
         return redirect()->route('server.show', $server)->with('success', 'Component berhasil ditambahkan.');
     }

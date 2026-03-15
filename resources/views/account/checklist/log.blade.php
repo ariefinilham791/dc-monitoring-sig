@@ -26,7 +26,7 @@
                             @if($round)
                                 <div class="col-12 col-sm-auto">
                                     <label class="form-label small text-muted mb-1 d-block d-sm-none">&nbsp;</label>
-                                    <a href="{{ route('checklist.log.export', ['round_id' => $round->id]) }}" class="btn btn-success w-100 w-sm-auto">
+                                    <a href="{{ route('checklist.log.export', ['round_id' => $round->id]) }}" class="btn btn-success w-100 w-sm-auto" data-skip-loader="1" download>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1 align-middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                         Export Excel
                                     </a>
@@ -41,9 +41,9 @@
                 @endif
             </div>
 
-            @if($round && $round->serverRoundChecks->isNotEmpty())
+            @if($round && $serverRoundChecksPaginator && $serverRoundChecksPaginator->isNotEmpty())
                 <div class="row g-3">
-                    @foreach($round->serverRoundChecks as $src)
+                    @foreach($serverRoundChecksPaginator as $src)
                         <div class="col-12">
                             <div class="card border-0 shadow-sm log-card">
                                 <div class="card-header bg-light border-0 py-2 px-3 d-flex flex-wrap align-items-center gap-2">
@@ -53,7 +53,9 @@
                                     @endif
                                     <code class="small">{{ $src->server->ip_address ?? '-' }}</code>
                                     @if($src->status === \App\Models\ServerRoundCheck::STATUS_COMPLETED && $src->completed_at)
-                                        <span class="badge bg-success">Selesai {{ $src->completed_at->format('d M Y H:i') }}</span>
+                                        <span class="badge bg-success">Selesai</span>
+                                        <span class="badge bg-dark">Terkunci</span>
+                                        <span class="text-muted small">{{ $src->completed_at->format('d M Y H:i') }}</span>
                                     @else
                                         <span class="badge bg-secondary">Belum selesai</span>
                                     @endif
@@ -137,6 +139,11 @@
                         </div>
                     @endforeach
                 </div>
+                @if($serverRoundChecksPaginator->hasPages())
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $serverRoundChecksPaginator->links() }}
+                    </div>
+                @endif
             @else
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center text-muted py-5">

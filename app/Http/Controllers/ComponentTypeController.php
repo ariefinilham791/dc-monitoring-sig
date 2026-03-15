@@ -26,9 +26,11 @@ class ComponentTypeController extends Controller
             'name' => 'required|string|max:100',
             'slug' => 'nullable|string|max:100|unique:component_types,slug',
             'sort_order' => 'nullable|integer|min:0',
+            'status_only' => 'nullable|boolean',
         ]);
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['status_only'] = (bool) ($request->boolean('status_only') ?? false);
         $validated['attributes'] = $this->parseAttributesFromRequest($request);
 
         $validated = $this->onlyExistingColumns($validated);
@@ -47,9 +49,11 @@ class ComponentTypeController extends Controller
             'name' => 'required|string|max:100',
             'slug' => 'nullable|string|max:100|unique:component_types,slug,' . $componentType->id,
             'sort_order' => 'nullable|integer|min:0',
+            'status_only' => 'nullable|boolean',
         ]);
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['status_only'] = (bool) ($request->boolean('status_only') ?? false);
         $validated['attributes'] = $this->parseAttributesFromRequest($request);
         $componentType->update($this->onlyExistingColumns($validated));
         return redirect()->route('component-type.index')->with('success', 'Tipe component berhasil diperbarui.');
